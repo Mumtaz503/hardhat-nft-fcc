@@ -25,18 +25,26 @@ describe("Basic NFT unit tests", function() {
        }); 
     });
     describe("mintNFT function", function() {
-        // beforeEach(async ()=>{
-
-        // });
-        it("Should mint the NFT to the user", async function(){
-            const transactionResponse = await basicNft.mintNFT();
-            await transactionResponse.wait(1);
-
+        let txResponse;
+        beforeEach(async ()=>{
+            txResponse = await basicNft.connect(userSigner).mintNFT();
+            await txResponse.wait(1);
+        });
+        it("Should update the values correctly upon minting", async function(){
             const tokenCounter = await basicNft.getTokenCounter();
             const tokenURI = await basicNft.tokenURI(0);
 
-            assert.equal(tokenCounter.toString(), "1"); //Assertion Error here. will fix later :(
-            assert.equal(tokenURI, basicNft.TOKEN_URI());
+            assert.equal(tokenCounter.toString(), "1");
+            assert.equal(tokenURI, await basicNft.TOKEN_URI());
+        });
+        it("Should update the balances of the owner", async function(){
+            const userAddress = user.address;
+            const tokenId = 0;
+            const userBalance = await basicNft.balanceOf(userAddress);
+            const nftOwner = await basicNft.ownerOf(tokenId);
+            //This no work :(
+            assert.equal(userBalance.toString(), "1");
+            assert.equal(nftOwner, userAddress);
         });
     });
 });
