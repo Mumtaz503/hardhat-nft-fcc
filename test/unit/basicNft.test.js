@@ -38,11 +38,11 @@ describe("Basic NFT unit tests", function() {
             assert.equal(tokenURI, await basicNft.TOKEN_URI());
         });
         it("Should update the balances of the owner", async function(){
-            const userAddress = user.address;
+            const userAddress = user;
             const tokenId = 0;
+
             const userBalance = await basicNft.balanceOf(userAddress);
             const nftOwner = await basicNft.ownerOf(tokenId);
-            //This no work :(
             assert.equal(userBalance.toString(), "1");
             assert.equal(nftOwner, userAddress);
         });
